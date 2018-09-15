@@ -1,0 +1,9 @@
+pg_databases:
+  - some
+  - db
+  - name
+
+sshd_config:
+  - regex: '^PermitRootLogin'
+    state: present
+    line: 'PermitRootLogin no'
