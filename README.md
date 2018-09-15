@@ -1,14 +1,6 @@
-# isucon-docker
+# isucon-tools
 
-Docker container for ISUCON. 
-
-# Development Environment
-
-## Tools
-
-- bash
-- neovim
-- netdata
+ISUCONやるための準備したりする 
 
 # Authorized keys
 
