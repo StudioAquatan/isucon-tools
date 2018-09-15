@@ -1,0 +1,13 @@
+- name: Restore MySQL DB from dumped sql
+  hosts: db
+  tasks:
+    - name: Install python-mysqldb
+      apt:
+        name: python-mysqldb
+      become: yes
+
+    - name: Restore DB
+      mysql_db:
+        state: import
+        name: all
+        target: '/tmp/{{ inventory_hostname_short }}.sql'

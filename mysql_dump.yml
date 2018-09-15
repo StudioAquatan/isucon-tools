@@ -1,0 +1,14 @@
+- name: MySQL dump
+  hosts: db
+  tasks:
+    - name: Install python-mysqldb
+      apt:
+        name: python-mysqldb
+      become: yes
+
+    - name: Execute dump
+      mysql_db:
+        state: dump
+        name: all
+        target: '/tmp/{{ inventory_hostname_short }}.sql'
+
