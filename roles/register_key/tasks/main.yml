@@ -1,0 +1,23 @@
+- name: Combine all public keys
+  slurp:
+    path: "{{ item }}"
+  with_fileglob: "./public_keys/*.pub"
+  delegate_to: localhost
+  register: pubkeys
+
+- name: Register keys
+  authorized_key:
+    user: '{{ ansible_ssh_user }}'
+    key: "{{ pubkeys.results|map(attribute='content')|map('b64decode')|join('\n') }}"
+    exclusive: yes
+
+- name: Enable public key authentication
+  lineinfile:
+    path: '/etc/ssh/sshd_config'
+    regexp: '{{ item.regex }}'
+    state: '{{ item.state }}'
+    line: '{{ item.line }}'
+  become: yes
+  with_items:
+    - '{{ sshd_config }}'
+  notify: restart_sshd

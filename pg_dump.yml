@@ -1,0 +1,19 @@
+- name: Backup PostgreSQL DB as dumped sql
+  hosts: db
+  tasks:
+    - name: Install dependencies
+      apt:
+        name: '{{ item }}'
+      with_items:
+        - postgresql
+        - libpq-dev
+        - python-psycopg2
+      become: true
+
+    - name: Dump database
+      postgresql_db:
+        state: dump
+        name: '{{ item }}'
+        target: '/tmp/{{ inventory_hostname_short }}-{{ item }}.sql'
+      with_items:
+        - '{{ pg_databases }}'

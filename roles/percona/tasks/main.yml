@@ -1,0 +1,4 @@
+- name: Install Percona Toolkit
+  apt:
+    name: percona-toolkit
+  become: true

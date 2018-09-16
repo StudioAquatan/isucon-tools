@@ -1,0 +1,12 @@
+- hosts: all
+  strategy: debug
+  debugger: on_failed
+  vars_files:
+    - 'vars/main.yml'
+  roles:
+    - name: alp
+      become: true
+
+    - name: percona
+
+    - name: register_key

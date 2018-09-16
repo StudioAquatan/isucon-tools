@@ -1,0 +1,35 @@
+- name: Create dir
+  file:
+    path: '/usr/local/alp'
+    state: directory
+
+- name: Download binary
+  get_url:
+    url: https://github.com/tkuchiki/alp/releases/download/v0.3.1/alp_linux_amd64.zip
+    dest: "/usr/local/alp/alp_linux_amd64.zip"
+  register: result
+  until: result is succeeded
+  retries: 3
+  delay: 5
+
+- name: Install unzip command
+  apt:
+    name: unzip
+
+- name: Unzip package
+  unarchive:
+    src: '/usr/local/alp/alp_linux_amd64.zip'
+    dest: '/usr/local/alp'
+    remote_src: yes
+
+- name: Put binary in /usr/local/bin/
+  copy:
+    src: '/usr/local/alp/alp'
+    dest: '/usr/local/bin/'
+    remote_src: yes
+
+- name: chmod a+x
+  file:
+    dest: '/usr/local/bin/alp'
+    mode: a+x
+
