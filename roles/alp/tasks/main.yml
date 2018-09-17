@@ -1,35 +1,41 @@
 - name: Create dir
   file:
-    path: '/usr/local/alp'
+    path: '{{ alp_work_dir }}'
     state: directory
 
 - name: Download binary
   get_url:
-    url: https://github.com/tkuchiki/alp/releases/download/v0.3.1/alp_linux_amd64.zip
-    dest: "/usr/local/alp/alp_linux_amd64.zip"
+    url: "https://github.com/tkuchiki/alp/releases/download/{{ alp_version }}/alp_linux_amd64.zip"
+    dest: "{{ alp_work_dir }}/alp_linux_amd64.zip"
   register: result
   until: result is succeeded
   retries: 3
   delay: 5
 
-- name: Install unzip command
+- name: Install unzip command with yum
+  yum:
+    name: unzip
+  when: ansible_os_family == 'RedHat'
+
+- name: Install unzip command with apt-get
   apt:
     name: unzip
+  when: ansible_os_family == 'Debian'
 
 - name: Unzip package
   unarchive:
-    src: '/usr/local/alp/alp_linux_amd64.zip'
-    dest: '/usr/local/alp'
+    src: '{{ alp_work_dir }}/alp_linux_amd64.zip'
+    dest: '{{ alp_work_dir }}'
     remote_src: yes
 
 - name: Put binary in /usr/local/bin/
   copy:
-    src: '/usr/local/alp/alp'
-    dest: '/usr/local/bin/'
+    src: '{{ alp_work_dir }}/alp'
+    dest: '{{ alp_install_loc }}/'
     remote_src: yes
 
 - name: chmod a+x
   file:
-    dest: '/usr/local/bin/alp'
+    dest: '{{ alp_install_loc }}/alp'
     mode: a+x
 
