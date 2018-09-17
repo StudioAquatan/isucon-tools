@@ -1,4 +1,20 @@
-- name: Install Percona Toolkit
-  apt:
-    name: percona-toolkit
-  become: true
+- name: Wget package
+  get_url:
+    url: https://www.percona.com/get/pt-query-digest
+    dest: '{{ percona_work_dir }}/pt-query-digest'
+  register: result
+  until: result is succeeded
+  retries: 3
+  delay: 5
+    
+- name: Put script in /usr/local/bin/
+  copy:
+    src: '{{ percona_work_dir }}/pt-query-digest'
+    dest: '{{ percona_install_loc }}/'
+    remote_src: yes
+
+- name: chmod a+x
+  file:
+    dest: '{{ percona_install_loc }}/pt-query-digest'
+    mode: a+x
+

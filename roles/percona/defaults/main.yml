@@ -1,0 +1,2 @@
+percona_work_dir: '/usr/local/percona'
+percona_install_loc: '/usr/local/bin'
